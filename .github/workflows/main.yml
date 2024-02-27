@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    
+    steps:       
+    - name: Deploy using ssh
+      uses: actions/checkout@v2
+      
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd /home/ec2-user/github/
+          sudo yum -y install httpd
+          sudo service httpd start
+          sudo systmctl enable httpd
+          echo '<!doctype html>' >> /var/www/html/index.html
+          echo '<html>' >> /var/www/html/index.html
+          echo '<head>' >> /var/www/html/index.html
+          echo '<title>This is the title of the webpage!</title>' >> /var/www/html/index.html
+          echo '</head>' >> /var/www/html/index.html
+          echo '</html>' >> /var/www/html/index.html
+           
+                
+       
