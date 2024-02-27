@@ -20,7 +20,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/ec2-user/github/
+          cd /home/ubuntu/github/
           sudo yum -y install httpd
           sudo service httpd start
           sudo systmctl enable httpd
