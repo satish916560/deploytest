@@ -15,18 +15,28 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.USER_NAME }}
           TARGET: ${{ secrets.TARGET_DIR }}
-
+		  
+      - name: Executing remote ssh commands using ssh key
+        uses: actions/checkout@v2  
       
         run : |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -t -t -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
 
-              # Now we have got the access of EC2 and we will start the deploy .
-              cd /home &&
-              # git checkout main &&
-              # git fetch --all &&
-              # git reset --hard origin/dev &&
-              # git pull origin main &&
-              sudo yum -y install httpd
-              sudo service httpd start
-              sudo systmctl enable httpd
+              # # Now we have got the access of EC2 and we will start the deploy .
+              # cd /home &&
+              # # git checkout main &&
+              # # git fetch --all &&
+              # # git reset --hard origin/dev &&
+              # # git pull origin main &&
+              # sudo yum -y install httpd
+              # sudo service httpd start
+              # sudo systmctl enable httpd
+			  
+		       script: |
+            sudo apt-get -y update
+            sudo apt-get install -y apache2
+            sudo systemctl start apache2
+            sudo systemctl enable apache2
+            cd home
+            sudo mv * /var/www/html
