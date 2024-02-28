@@ -8,33 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2 
       - name: Build & Deploy
+        uses: actions/checkout@v1 
+      
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.USER_NAME }}
-          TARGET: ${{ secrets.TARGET_DIR }}
+          #TARGET: ${{ secrets.TARGET_DIR }}
 		  
       - name: Executing remote ssh commands using ssh key
-        uses: actions/checkout@v2  
+        uses: actions/checkout@v1  
       
         run : |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -t -t -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
 
-              # # Now we have got the access of EC2 and we will start the deploy .
-              # cd /home &&
-              # # git checkout main &&
-              # # git fetch --all &&
-              # # git reset --hard origin/dev &&
-              # # git pull origin main &&
-              # sudo yum -y install httpd
-              # sudo service httpd start
-              # sudo systmctl enable httpd
-			  
-		       script: |
-            sudo apt-get -y update
+          script: |
             sudo apt-get install -y apache2
             sudo systemctl start apache2
             sudo systemctl enable apache2
