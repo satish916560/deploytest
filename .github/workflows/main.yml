@@ -1,81 +1,32 @@
-# name: Deploy
-
-# on:
-#   push:
-#     branches: [ main ]
-
-# jobs:
-#   Deploy:
-#     name: Deploy to EC2
-#     runs-on: ubuntu-latest
-    
-    
-#     steps:       
-#     - name: Deploy using ssh
-#       uses: actions/checkout@v2
-      
-#       with:
-#         host: ${{ secrets.SSH_HOST }}
-#         username: ${{ secrets.USER_NAME }}
-#         key: ${{ secrets.SSH_PRIVATE_KEY }}
-#         port: 22
-#         script: |
-#           cd /home/ubuntu/github/
-#           sudo yum -y install httpd
-#           sudo service httpd start
-#           sudo systmctl enable httpd
-#           echo '<!doctype html>' >> /var/www/html/index.html
-#           echo '<html>' >> /var/www/html/index.html
-#           echo '<head>' >> /var/www/html/index.html
-#           echo '<title>This is the title of the webpage!</title>' >> /var/www/html/index.html
-#           echo '</head>' >> /var/www/html/index.html
-#           echo '</html>' >> /var/www/html/index.html
-
-name: Push-to-EC2
-
-# Trigger deployment only on push to main branch 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  deploy:
-    name: Deploy to EC2 on master branch push 
+  Deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout the files
-        uses: actions/checkout@v2
-
-      - name: Deploy to Server 1
-        uses: easingthemes/ssh-deploy@main
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.USER_NAME }}
           TARGET: ${{ secrets.TARGET_DIR }}
 
-      - name: Executing remote ssh commands using ssh key
-        uses: actions/checkout@v2  #appleboy/ssh-action@master
-        # env:
-        #     PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        #     HOSTNAME: ${{secrets.SSH_HOST}}
-        #     USER_NAME: ${{secrets.USER_NAME}}
       
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -t -t -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-        
-        # with:
-        #   host: ${{ secrets.SSH_HOST }}
-        #   username: ${{ secrets.USER_NAME }}
-        #   key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            sudo apt-get -y update
-            sudo apt-get install -y apache2
-            sudo systemctl start apache2
-            sudo systemctl enable apache2
-            cd home
-            sudo mv * /var/www/html
-           
+          ssh -t -t -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST}
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              cd /home &&
+              # git checkout main &&
+              # git fetch --all &&
+              # git reset --hard origin/dev &&
+              # git pull origin main &&
+              sudo yum -y install httpd
+              sudo service httpd start
+              sudo systmctl enable httpd
