@@ -12,7 +12,7 @@ jobs:
     
     steps:       
     - name: Deploy using ssh
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -21,15 +21,15 @@ jobs:
         port: 22
         script: |
           cd /home
-          sudo apt-get -y update
-          sudo apt-get install -y apache2
-          sudo systemctl start apache2
-          sudo systemctl enable apache2
-          cd /home
+          # git clone main &&
+          # git fetch --all &&
+          # git reset --hard origin/main &&
+          # git pull origin/main
+          # git status
+          sudo yum -y install httpd
+          sudo service httpd start
+          sudo systmctl enable httpd
           sudo mv * /var/www/html
-          # sudo yum -y install httpd
-          # sudo service httpd start
-          # sudo systmctl enable httpd
           # echo '<!doctype html>' >> /var/www/html/index.html
           # echo '<html>' >> /var/www/html/index.html
           # echo '<head>' >> /var/www/html/index.html
