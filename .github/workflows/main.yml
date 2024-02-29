@@ -1,4 +1,4 @@
-name: Push-to-EC2
+name: Deploy sample 
 
 # Trigger deployment only on push to main branch
 on:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v2
 
-      - name: Deploy to Server 1
+      - name: Deploy to Server 
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
