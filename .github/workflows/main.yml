@@ -1,4 +1,4 @@
-name: Deploy sample 
+name: Deploy sample project.
 
 # Trigger deployment only on push to main branch
 on:
